@@ -1,0 +1,18 @@
+services:
+  frontend:
+    container_name: app-frontend
+    build: ./Frontend/
+    ports:
+      - "3000:3000"
+    environment:
+      - PRODUCTION_MODE=${PRODUCTION_MODE}
+  database:
+    container_name: app-database
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
