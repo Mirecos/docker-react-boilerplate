@@ -13,7 +13,7 @@ RUN pnpm install
 RUN pnpm run build
 
 RUN pnpm install serve
-CMD echo $PWD
-CMD ./start.sh
+
+CMD /srv/start.sh
 
 EXPOSE 3000

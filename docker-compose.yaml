@@ -6,6 +6,8 @@ services:
       - "3000:3000"
     environment:
       - PRODUCTION_MODE=${PRODUCTION_MODE}
+    networks:
+      - app-network  
   database:
     container_name: app-database
     image: mysql:5.7
@@ -16,3 +18,23 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - app-network  
+  api:
+    container_name: app-api
+    ports: 
+      - 8080:8080
+    build: ./Api/
+    environment:
+      - PRODUCTION_MODE=${PRODUCTION_MODE}
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - TOKEN_EXPIRATION_DAYS=${TOKEN_EXPIRATION_DAYS}
+      - HOSTNAME=${HOSTNAME}
+      - PORT=${PORT}
+    networks:
+      - app-network  
+
+networks:
+  app-network:
+    driver: bridge
