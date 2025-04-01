@@ -5,7 +5,7 @@
   "scripts": {
     "updatedb": "npx prisma db push",
     "migrate": "npx prisma migrate dev --name ",
-    "dev": "nodemon ./src/index.ts",
+    "dev": "nodemon ./src/index.ts -L",
     "prod": "ts-node ./src/index.ts"
   },
   "author": "",

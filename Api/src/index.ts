@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import express, { Express, Request, Response } from "express";
 import { userRouter } from './routes/user';
-import UserAllowed from './decorators/UserAllowed';
 
 export const prisma = new PrismaClient()
 
@@ -12,8 +11,8 @@ app.use(express.json());
 
 app.use("/user", userRouter);
 
-app.get("/home" , (req: Request, res: Response) => {
-    res.send("Hey")
+app.get("/" , (req: Request, res: Response) => {
+    res.send("Api is running correctly.")
 });
 
 // Specifying hostname assumes to not open to public network
