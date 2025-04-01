@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/config';
-import { CustomError } from '../types/CustomError';
+import { CustomError } from '../types/classes/CustomError';
 import { prisma } from '..';
 
 // 
@@ -12,14 +12,14 @@ function Identify(){
     return (req: Request, res: any, next: NextFunction) => {
         const token = req.headers.authorization;
         if (!token) {
-            return res.status(401).send(new CustomError('401', 'No token provided'));
+            return res.status(401).send(new CustomError('401', 'No token provided', req));
         }
         jwt.verify(token, JWT_SECRET, async (err: any, decoded: any) => {
             if (err) {
-                return res.status(401).send(new CustomError('401', 'Invalid token'));
+                return res.status(401).send(new CustomError('401', 'Invalid token', req));
             }
             let user_db = await prisma.user.findUnique({where: {id: decoded.id, token: token, tokenExpiry: {gt: new Date(Date.now())}}});
-            if(!user_db)return res.status(500).send(new CustomError('500', 'User not found, or session expired.'));
+            if(!user_db)return res.status(500).send(new CustomError('500', 'User not found, or session expired.', req));
             (req as any).current_user = user_db;
             next()
         });

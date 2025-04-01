@@ -1,6 +1,6 @@
 services:
   frontend:
-    container_name: app-frontend
+    container_name: app-frontend-boilerplate
     build: ./Frontend/
     ports:
       - "3000:3000"
@@ -10,7 +10,7 @@ services:
     volumes:
       - ./Frontend/src:/srv/src/
   database:
-    container_name: app-database
+    container_name: app-database-boilerplate
     image: mysql:5.7
     ports:
       - "3306:3306"
@@ -20,7 +20,7 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
   api:
-    container_name: app-api
+    container_name: app-api-boilerplate
     ports: 
       - 8080:8080
     build: ./Api/

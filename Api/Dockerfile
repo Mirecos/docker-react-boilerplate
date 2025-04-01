@@ -15,6 +15,10 @@ ENV TOKEN_EXPIRATION_DAYS=$TOKEN_EXPIRATION_DAYS
 ENV PNPM_HOME="/root/.local/share/pnpm"
 ENV PATH="${PATH}:${PNPM_HOME}"
 
+RUN apk update
+# Needed for prisma to work fine
+RUN apk add openssl
+
 RUN npm install -g pnpm
 RUN pnpm --version
 

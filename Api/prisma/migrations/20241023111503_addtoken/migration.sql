@@ -1,9 +1,0 @@
--- DropIndex
-DROP INDEX `Post_authorId_fkey` ON `post`;
-
--- AlterTable
-ALTER TABLE `user` ADD COLUMN `token` VARCHAR(191) NOT NULL DEFAULT '',
-    ADD COLUMN `tokenExpiry` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
-
--- AddForeignKey
-ALTER TABLE `Post` ADD CONSTRAINT `Post_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

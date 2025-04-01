@@ -12,13 +12,6 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
-enum Role {
-  SUPERADMIN
-  ADMIN
-  MEMBER
-}
-
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
@@ -26,17 +19,21 @@ model User {
   password String
   token String @default("")
   tokenExpiry DateTime @default(now())
-  role  Role   @default(MEMBER)
   lastLogin DateTime @default(now())
   creationDate DateTime @default(now())
-  posts Post[]
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  titlessss     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Role {
+  id    Int     @id @default(autoincrement())
+  label String @unique
+  permissions Permission[]
+  User User[]
+}
+
+model Permission {
+  id    Int     @id @default(autoincrement())
+  label String  @unique
+  roles Role[]
 }

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/config';
-import { CustomError } from '../types/CustomError';
+import { CustomError } from '../types/classes/CustomError';
 import { Role } from '@prisma/client';
 import { prisma } from '..';
 import { checkPermission } from '../tools/CheckPermission';
