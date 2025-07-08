@@ -34,4 +34,6 @@ services:
     volumes:
       - ./Api/src:/api/src/
       - ./Api/prisma:/api/prisma/
+    depends_on:
+      - database
 
