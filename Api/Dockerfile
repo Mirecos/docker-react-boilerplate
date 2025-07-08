@@ -12,21 +12,17 @@ ENV DATABASE_URL=$DATABASE_URL
 ENV JWT_SECRET=$JWT_SECRET
 ENV TOKEN_EXPIRATION_DAYS=$TOKEN_EXPIRATION_DAYS
 
-ENV PNPM_HOME="/root/.local/share/pnpm"
-ENV PATH="${PATH}:${PNPM_HOME}"
 
 RUN apk update
 # Needed for prisma to work fine
 RUN apk add openssl
 
-RUN npm install -g pnpm
-RUN pnpm --version
-
 COPY . ./api
 
 WORKDIR /api
-RUN pnpm install
+RUN npm install
 
 CMD /api/start.sh
 
+EXPOSE 5555
 EXPOSE 3001

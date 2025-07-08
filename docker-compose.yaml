@@ -3,7 +3,7 @@ services:
     container_name: app-frontend-boilerplate
     build: ./Frontend/
     ports:
-      - "3000:3000"
+      - 3000:3000
     environment:
       - PRODUCTION_MODE=${PRODUCTION_MODE}
       - WATCHPACK_POLLING=true 
@@ -23,6 +23,7 @@ services:
     container_name: app-api-boilerplate
     ports: 
       - 8080:8080
+      - 5555:5555
     build: ./Api/
     environment:
       - PRODUCTION_MODE=${PRODUCTION_MODE}
