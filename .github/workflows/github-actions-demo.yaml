@@ -1,8 +1,23 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+      force_rebuild:
+        description: 'Force rebuild all images'
+        required: false
+        default: true
+        type: boolean
 jobs:
-  Explore-GitHub-Actions:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Install sshpass
@@ -16,8 +31,9 @@ jobs:
         run: |
           sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
             echo 'Connected via SSH!'
-            sudo docker compose down -f /SmartPlanner/docker-compose.prod.yaml down
+            cd /SmartPlanner
+            sudo docker compose -f docker-compose.prod.yaml down
             sudo git fetch origin
             sudo git pull
-            docker-compose up -d --build
+            sudo docker compose -f docker-compose.prod.yaml up -d --build
           EOF
