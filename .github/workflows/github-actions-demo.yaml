@@ -1,6 +1,6 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on: [workflow_dispatch]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -8,10 +8,16 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get update && sudo apt-get install -y sshpass
 
-      - name: Connect via SSH and run a command
+      - name: Deploy application via SSH
         env:
           SSH_USER: ${{ secrets.OVH_SERVER_USERNAME }}
           SSH_PASSWORD: ${{ secrets.OVH_SERVER_PASSWORD }}
           SSH_HOST: ${{ secrets.OVH_SERVER_DNS }}
         run: |
-          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "echo 'Connected via SSH!'"
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+            echo 'Connected via SSH!'
+            sudo docker compose down -f /SmartPlanner/docker-compose.prod.yaml down
+            sudo git fetch origin
+            sudo git pull
+            docker-compose up -d --build
+          EOF
