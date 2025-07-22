@@ -12,8 +12,6 @@ services:
       - web
   api:
     container_name: app-api
-    ports: 
-      - 5555:5555
     build: ./Api/
     environment:
       - NODE_ENV=${NODE_ENV}
