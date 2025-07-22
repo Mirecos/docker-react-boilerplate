@@ -4,9 +4,7 @@ COPY . ./srv
 WORKDIR /srv
 
 RUN npm install
-RUN npm run build
-RUN npm install serve
 
-CMD /srv/start.sh
+CMD npm run start
 
 EXPOSE 3000
