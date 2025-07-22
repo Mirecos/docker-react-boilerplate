@@ -10,6 +10,9 @@ if( !process.env.PORT ) {
 if( !process.env.HOSTNAME ) {
     throw new Error("HOSTNAME environment variable is not set");
 }
+if( !process.env.DATABASE_URL ) {
+    throw new Error("DATABASE_URL environment variable is not set");
+}
 
 export const port = parseInt(process.env.PORT as string);
 export const hostname = process.env.HOSTNAME as string;
