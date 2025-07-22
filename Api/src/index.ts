@@ -1,12 +1,11 @@
 import { PrismaClient } from '@prisma/client'
 import express, { Express, Request, Response } from "express";
 import { userRouter } from './routes/user';
+import { port, hostname } from './config/config';
 
 export const prisma = new PrismaClient()
 
 const app: Express = express();
-const port = parseInt(process.env.PORT || '3000');
-const hostname = process.env.HOSTNAME || 'localhost';
 app.use(express.json());
 
 app.use("/user", userRouter);
