@@ -6,8 +6,9 @@ export class Success{
     code=200;
     message: string;
     data: any;
-    constructor(message: string, req: Request, options?: any) {
-        logger.success(extractUserInfo(req) + " " + message)
+    constructor(message: string, req?: Request, options?: any) {
+        if(req)logger.success(`${extractUserInfo(req)} ${message}`)
+        
         this.message = message;
         if(options)this.data = options;
     }
