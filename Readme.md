@@ -19,3 +19,5 @@ In dev mode all services are used. NGinx expose port 80 :
 - localhost:80/api/ -> Express APP served for production
 
 As the react is served through static files, the frontend container is not running in prod mode.
+
+## 
