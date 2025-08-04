@@ -1,10 +1,14 @@
 import React from 'react';
-import { baseUrl } from './Routes/localApi';
+import { isIdentified } from './api/localApi/user';
 
 
 
 function App() {
   
+  isIdentified().then(data => {
+    console.log('User identified:', data);
+  })
+
   return (
     <div>
       Hello world

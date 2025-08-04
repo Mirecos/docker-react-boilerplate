@@ -13,8 +13,12 @@ if( !process.env.HOSTNAME ) {
 if( !process.env.DATABASE_URL ) {
     throw new Error("DATABASE_URL environment variable is not set");
 }
+if( !process.env.CORS_ALLOW_ORIGIN ) {
+    throw new Error("CORS_ALLOW_ORIGIN environment variable is not set");
+}
 
 export const port = parseInt(process.env.PORT as string);
 export const hostname = process.env.HOSTNAME as string;
 export const JWT_SECRET = process.env.JWT_SECRET as string;
 export const days_token_expiry = parseInt(process.env.TOKEN_EXPIRATION_DAYS as string, 10);
+export const CORS_ALLOW_ORIGIN = process.env.CORS_ALLOW_ORIGIN as string;

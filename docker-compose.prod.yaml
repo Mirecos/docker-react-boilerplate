@@ -1,6 +1,6 @@
 services:
   database:
-    container_name: app-database
+    container_name: app-database-prod
     image: mysql:5.7
     environment:
       - PRODUCTION_MODE=true
@@ -11,7 +11,7 @@ services:
     networks:
       - web
   api:
-    container_name: app-api
+    container_name: app-api-prod
     build: ./Api/
     environment:
       - NODE_ENV=${NODE_ENV}
@@ -25,6 +25,7 @@ services:
       - ROOT_USER_PASSWORD=${ROOT_USER_PASSWORD}
       - FRONTEND_URL=${FRONTEND_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN}
     volumes:
       - ./Api/src:/api/src/
       - ./Api/prisma:/api/prisma/
@@ -33,17 +34,18 @@ services:
     networks:
       - web
   nginx:
+    container_name: app-nginx-prod
     build:
       context: .
-      dockerfile: nginx/Dockerfile
-      args:
-        - PRODUCTION_MODE=true
-        - REACT_APP_API_URL=${API_URL}
+      dockerfile: nginx/prod/Dockerfile
     ports:
       - "80:80"
+    environment:
+      - PRODUCTION_MODE=true
+      - REACT_APP_API_BASE_URL=${REACT_APP_API_BASE_URL}
     depends_on:
       - api
-      - python_api
+      - database
     networks:
       - web
     restart: always
