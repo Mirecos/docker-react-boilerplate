@@ -1,14 +1,15 @@
 import React from 'react';
-import { baseUrl } from './Routes/localApi';
-
-
+import { UserProvider } from './providers/UserProvider';
+import { Box } from '@mui/material';
+import Navbar from './components/layout/navbar';
 
 function App() {
-  
   return (
-    <div>
-      Hello world
-    </div>
+    <UserProvider>
+      <Box>
+        <Navbar />
+      </Box>
+    </UserProvider>
   );
 }
 
