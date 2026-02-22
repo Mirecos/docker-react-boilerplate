@@ -17,11 +17,17 @@ RUN apk update
 # Needed for prisma to work fine
 RUN apk add openssl
 
-COPY . ./api
+COPY package.json ./api/package.json
 
 WORKDIR /api
-RUN npm install
 
+RUN npm install -g pnpm
+RUN pnpm --version
+RUN pnpm install
+
+COPY . /api
+
+RUN chmod +x /api/start.sh
 CMD /api/start.sh
 
 EXPOSE 5555
