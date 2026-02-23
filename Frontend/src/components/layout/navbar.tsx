@@ -26,9 +26,13 @@ export default function Navbar() {
                 >
                     MUI
                 </Typography>
-                <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1, mr: 2 }}>
+                <Box display={isAuthenticated ? 'block' : 'none'} sx={{ gap: 1, mr: 2 }}>
                     <Button color="inherit" component={Link} to="/">Home</Button>
                     <Button color="inherit" component={Link} to="/profile">Profile</Button>
+                </Box>
+                <Box display={!isAuthenticated ? 'block' : 'none'} sx={{ gap: 1, mr: 2 }}>
+                    <Button color="inherit" component={Link} to="/login">Login</Button>
+                    <Button color="inherit" component={Link} to="/register">Register</Button>
                 </Box>
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     {isAuthenticated && user ? (
