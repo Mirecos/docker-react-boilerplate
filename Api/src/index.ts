@@ -1,10 +1,13 @@
-import { PrismaClient } from '@prisma/client'
 import express, { Express, Request, Response } from "express";
 import { userRouter } from './routes/user';
 import { port, hostname } from './config/config';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import { PrismaClient } from '../prisma/generated/client';
 
-export const prisma = new PrismaClient()
-
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+export const prisma = new PrismaClient({ adapter });
 const app: Express = express();
 app.use(express.json());
 

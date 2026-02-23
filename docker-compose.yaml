@@ -14,21 +14,20 @@ services:
       - web
   database:
     container_name: app-database-boilerplate
-    image: mysql:5.7
+    image: postgres:16
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - web
   api:
     container_name: app-api-boilerplate
     ports: 
       - 8080:8080
-      - 5555:5555
+      - 51212:51212
     build: ./Api/
     environment:
       - PRODUCTION_MODE=false

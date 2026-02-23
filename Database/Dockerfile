@@ -1,27 +1,22 @@
-# Use the official MySQL image as a base
-FROM mysql:latest
+# Use the official PostgreSQL image as a base
+FROM postgres:16
 
-# Set the working directory to /app
+# Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
+# Copy the current directory contents into the container
 ADD . /app
 
-ARG MYSQL_DATABASE
-ARG MYSQL_USER
-ARG MYSQL_PASSWORD
-ARG MYSQL_ROOT_PASSWORD
+ARG POSTGRES_DB
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
 
-# Set the default user for the MySQL image
-USER mysql
+ENV POSTGRES_DB=$POSTGRES_DB
+ENV POSTGRES_USER=$POSTGRES_USER
+ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 
-ENV MYSQL_DATABASE=$MYSQL_DATABASE
-ENV MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-ENV MYSQL_USER=$MYSQL_USER
-ENV MYSQL_PASSWORD=$MYSQL_PASSWORD
+# Expose port 5432 to allow connections to the database
+EXPOSE 5432
 
-# Expose port 3306 to allow connections to the database
-EXPOSE 3306
-
-# Start the MySQL server when the container is run
-CMD ["mysqld"]
+# Start the PostgreSQL server when the container is run
+CMD ["postgres"]

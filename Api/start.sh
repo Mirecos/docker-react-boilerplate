@@ -1,12 +1,12 @@
 #!/bin/sh
 if [ "$PRODUCTION_MODE" = "True" ]; then
     echo "Starting in production mode"
-    npx prisma generate
-    pnpm run migrate:prod
+    (cd prisma && npx prisma generate)
+    (cd prisma && npx prisma migrate deploy)
     exec npm run prod
 else
     echo "Starting in development mode"
-    npx prisma generate
-    npm run migrate:dev
-    npx prisma studio & exec npm run dev
+    (cd prisma && npx prisma generate)
+    (cd prisma && npx prisma db push --accept-data-loss)
+    (cd prisma && npx prisma studio --browser none) & exec npm run dev
 fi

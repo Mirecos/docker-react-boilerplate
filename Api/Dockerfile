@@ -30,5 +30,5 @@ COPY . /api
 RUN chmod +x /api/start.sh
 CMD /api/start.sh
 
-EXPOSE 5555
+EXPOSE 51212
 EXPOSE 3001
