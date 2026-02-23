@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
+import { useUser } from '../context/userContext';
+import { useSnackbar } from '../context/snackbarContext';
 
 export default function RegisterPage() {
+    const userContext = useUser();
+    const snackbarContext = useSnackbar();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            alert('Passwords do not match');
+            snackbarContext.showSnackbar("Passwords do not match", "error");
             return;
+        }
+
+        try {
+            await userContext.register(username, email, password);
+            snackbarContext.showSnackbar("Registration successful!", "success");
+        } catch (error) {
+            snackbarContext.showSnackbar("Registration failed. Please try again.", "error");
         }
         console.log('Register attempt:', { username, email, password });
     };

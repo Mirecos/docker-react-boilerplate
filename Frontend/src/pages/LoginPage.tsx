@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useUser } from '../context/userContext';
+import { useSnackbar } from '../context/snackbarContext';
 
 function LoginPage() {
     const userContext = useUser();
+    const snackbarContext = useSnackbar();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Login attempt:', { email, password });
         try {
-            userContext.login(email, password)
+            await userContext.login(email, password)
         } catch (error) {
-                
+            snackbarContext.showSnackbar("Login failed. Please check your credentials and try again.", "error");
         }
     };
 
