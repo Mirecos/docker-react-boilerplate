@@ -1,9 +1,9 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import { userRoutes } from "./routes";
 
 export const updateUser = async (user: { id: number; email?: string; name?: string }) => {
     try {
-        const response = await axios.patch(userRoutes.update, { user });
+        const response = await axiosInstance.patch(userRoutes.update, { user });
         return response.data;
     } catch (error) {
         throw error;
@@ -12,7 +12,7 @@ export const updateUser = async (user: { id: number; email?: string; name?: stri
 
 export const deleteUser = async (userId: number) => {
     try {
-        const response = await axios.delete(userRoutes.delete, { data: { user: { id: userId } } });
+        const response = await axiosInstance.delete(userRoutes.delete, { data: { user: { id: userId } } });
         return response.data;
     } catch (error) {
         throw error;
@@ -21,7 +21,7 @@ export const deleteUser = async (userId: number) => {
 
 export const createUser = async (user: { email: string; password: string; name: string }) => {
     try {
-        const response = await axios.post(userRoutes.createUser, { user });
+        const response = await axiosInstance.post(userRoutes.createUser, { user });
         return response.data;
     } catch (error) {
         throw error;
@@ -30,7 +30,7 @@ export const createUser = async (user: { email: string; password: string; name: 
 
 export const isIdentified = async () => {
     try {
-        const response = await axios.get(userRoutes.isIdentified);
+        const response = await axiosInstance.get(userRoutes.isIdentified);
         return response.data;
     } catch (error) {
         throw error;
@@ -39,7 +39,7 @@ export const isIdentified = async () => {
 
 export const registerUser = async (user: { email: string; password: string; name: string }) => {
     try {
-        const response = await axios.post(userRoutes.register, { user });
+        const response = await axiosInstance.post(userRoutes.register, { user });
         return response.data;
     } catch (error) {
         throw error;
@@ -48,7 +48,7 @@ export const registerUser = async (user: { email: string; password: string; name
 
 export const loginUser = async (user: { email: string; password: string }) => {
     try {
-        const response = await axios.post(userRoutes.login, { user });
+        const response = await axiosInstance.post(userRoutes.login, { user });
         return response.data;
     } catch (error) {
         throw error;

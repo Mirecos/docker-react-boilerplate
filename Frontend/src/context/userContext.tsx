@@ -22,6 +22,7 @@ export interface UserContextType {
     logout: () => void;
     updateUser: (data: { email?: string; name?: string }) => Promise<void>;
     deleteAccount: () => Promise<void>;
+    clearSession: () => void;
 }
 
 export const UserContext = createContext<UserContextType | null>(null);
@@ -96,6 +97,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const clearSession = () => {
+        setUser(null);
+        setIsAuthenticated(false);
+    }
+
     const value: UserContextType = {
         user,
         isAuthenticated,
@@ -105,6 +111,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         logout,
         updateUser,
         deleteAccount,
+        clearSession
     };
 
     return (
