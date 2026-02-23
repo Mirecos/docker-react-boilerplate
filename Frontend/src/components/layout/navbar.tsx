@@ -1,4 +1,5 @@
-import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useUser } from "../../context/userContext";
 
 
@@ -19,11 +20,16 @@ export default function Navbar() {
                 </IconButton>
                 <Typography
                     variant="h6"
-                    component="div"
-                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                    component={Link}
+                    to="/"
+                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, color: 'inherit', textDecoration: 'none' }}
                 >
                     MUI
                 </Typography>
+                <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1, mr: 2 }}>
+                    <Button color="inherit" component={Link} to="/">Home</Button>
+                    <Button color="inherit" component={Link} to="/profile">Profile</Button>
+                </Box>
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     {isAuthenticated && user ? (
                         <Avatar sx={{ bgcolor: 'secondary.main' }}>
