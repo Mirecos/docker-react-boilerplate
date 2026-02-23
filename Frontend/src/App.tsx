@@ -1,7 +1,7 @@
 import React from 'react';
-import { UserProvider } from './providers/UserProvider';
 import { Box } from '@mui/material';
 import Navbar from './components/layout/navbar';
+import { UserProvider } from './context/userContext';
 
 function App() {
   return (

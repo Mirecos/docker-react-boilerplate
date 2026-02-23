@@ -1,5 +1,4 @@
-import React, { useState, useEffect, ReactNode } from "react";
-import { UserContext, UserInfo } from "../context/userContext";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import {
     loginUser,
     registerUser,
@@ -7,6 +6,33 @@ import {
     updateUser as apiUpdateUser,
     deleteUser,
 } from "../api/user";
+
+export interface UserInfo {
+    id: number;
+    email: string;
+    name: string;
+}
+
+export interface UserContextType {
+    user: UserInfo | null;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    login: (email: string, password: string) => Promise<void>;
+    register: (name: string, email: string, password: string) => Promise<void>;
+    logout: () => void;
+    updateUser: (data: { email?: string; name?: string }) => Promise<void>;
+    deleteAccount: () => Promise<void>;
+}
+
+export const UserContext = createContext<UserContextType | null>(null);
+
+export const useUser = (): UserContextType => {
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error("useUser must be used within a UserProvider");
+    }
+    return context;
+};
 
 interface UserProviderProps {
     children: ReactNode;
@@ -70,20 +96,21 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const value: UserContextType = {
+        user,
+        isAuthenticated,
+        isLoading,
+        login,
+        register,
+        logout,
+        updateUser,
+        deleteAccount,
+    };
+
     return (
-        <UserContext.Provider
-            value={{
-                user,
-                isAuthenticated,
-                isLoading,
-                login,
-                register,
-                logout,
-                updateUser,
-                deleteAccount,
-            }}
-        >
+        <UserContext.Provider value={value}>
             {children}
         </UserContext.Provider>
     );
 };
+

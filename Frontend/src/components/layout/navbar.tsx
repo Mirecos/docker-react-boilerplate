@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useUser } from "../../context/userContext";
 
 
@@ -26,9 +26,9 @@ export default function Navbar() {
                 </Typography>
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     {isAuthenticated && user ? (
-                        <div>
-                            <p>Authenticated as <strong>{user.name}</strong> ({user.email})</p>
-                        </div>
+                        <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                            {user.name.charAt(0).toUpperCase()}
+                        </Avatar>
                     ) : (
                         <p>Not authenticated</p>
                     )}
