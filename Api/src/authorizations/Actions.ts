@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import { CustomError } from "../types/classes/CustomError";
 import { getPermissions } from "./RolesAndPerms";
 import { logger } from "../config/logger";
-import { permissionExists, roleExists, userExistsByEmail } from "../tools/VerifyExists";
+import { roleExists } from "../tools/VerifyExists";
 
 if( !process.env.ROOT_USER_EMAIL){
     new CustomError("404","Specify an email for the root super-user in the '.env' file. (ROOT_USER_EMAIL)", null)
@@ -33,19 +33,19 @@ const rootUser = {
 
 // Initialization script
 export async function initPermissions(){
-    await prisma.permission.deleteMany()
-    await prisma.role.deleteMany()
-
-    const permissions = []
+    const permissions: { label: string }[] = []
     const salt = await bcrypt.genSalt();
+    const hashedRootPassword = await bcrypt.hash(rootUser.password, salt)
 
     // Create permissions
-    for(const item in PermissionLabel){
-        permissions.push({label: item})
-        if(! await permissionExists(item)){
-            logger.info(`Creating permission ${item}` )
-            await prisma.permission.create({data: {label: item}})
-        }else logger.error(`Permissions ${item} already exists !`)
+    for (const item of Object.values(PermissionLabel)) {
+        permissions.push({ label: item })
+        await prisma.permission.upsert({
+            where: { label: item },
+            update: {},
+            create: { label: item }
+        })
+        logger.info(`Permission ${item} ensured.`)
     }
 
     // Create Super-Admin role
@@ -66,16 +66,18 @@ export async function initPermissions(){
         else{
             if(! await roleExists(item)){
                 logger.info(`Creating role : ${item}`)
-                await prisma.role.create({data: {label: item, permissions: {connect: getPermissions(item)}}})
+                await prisma.role.create({data: {label: item, permissions: {connect: getPermissions(item as RoleLabel).map(p => ({ label: p }))}}})
             }else logger.error(`Role ${item} already exists !`)
         }
     }
 
-    // Create super-user account
-    if(! await userExistsByEmail(rootUser.email)){
-        logger.info("Creating super-user.")
-        await prisma.user.create({data: {...rootUser, password: await bcrypt.hash(rootUser.password, salt)}})
-    }
+    // Ensure super-user account
+    await prisma.user.upsert({
+        where: { email: rootUser.email },
+        update: { role: { connect: { label: RoleLabel.SUPERADMIN } } },
+        create: { ...rootUser, password: hashedRootPassword }
+    })
+    logger.info("Super-user ensured.")
 
     // Success
     logger.info("Permissions, roles, and super-user were successfully initialized !")
@@ -84,15 +86,18 @@ export async function initPermissions(){
 
 export async function updatePermissions(){
     const salt = await bcrypt.genSalt();
-    const permissions = []
+    const permissions: { label: string }[] = []
+    const hashedRootPassword = await bcrypt.hash(rootUser.password, salt)
 
     // Create permissions
-    for(const item in PermissionLabel){
-        permissions.push({label: item})
-        if(! await permissionExists(item)){
-            logger.info(`Creating permission ${item}` )
-            await prisma.permission.create({data: {label: item}})
-        }else logger.info(`Permissions ${item} already exists !`)
+    for (const item of Object.values(PermissionLabel)) {
+        permissions.push({ label: item })
+        await prisma.permission.upsert({
+            where: { label: item },
+            update: {},
+            create: { label: item }
+        })
+        logger.info(`Permission ${item} ensured.`)
     }
 
     // Create Super-Admin role
@@ -113,22 +118,18 @@ export async function updatePermissions(){
         else{
             if(! await roleExists(item)){
                 logger.info(`Creating role : ${item}`)
-                await prisma.role.create({data: {label: item, permissions: {connect: getPermissions(item)}}})
+                await prisma.role.create({data: {label: item, permissions: {connect: getPermissions(item as RoleLabel).map(p => ({ label: p }))}}})
             }else logger.info(`Role ${item} already exists !`)
         }
     }
 
-    // Create super-user account
-    if(! await userExistsByEmail(rootUser.email)){
-        logger.info("Creating super-user.")
-        await prisma.user.create({data: {...rootUser, password: await bcrypt.hash(rootUser.password, salt)}})
-    }else{
-        logger.info("Updating super-user.")
-        await prisma.user.update({
-            where: { email: rootUser.email },
-            data: { role: { connect: { label: RoleLabel.SUPERADMIN } } }
-        })
-    }
+    // Ensure super-user account
+    await prisma.user.upsert({
+        where: { email: rootUser.email },
+        update: { role: { connect: { label: RoleLabel.SUPERADMIN } } },
+        create: { ...rootUser, password: hashedRootPassword }
+    })
+    logger.info("Super-user ensured.")
 
     // Success
     logger.info("Permissions, roles, and super-user were successfully initialized !")

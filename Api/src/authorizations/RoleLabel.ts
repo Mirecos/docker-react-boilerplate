@@ -3,7 +3,5 @@
  */
 export enum RoleLabel{
     SUPERADMIN = "SUPERADMIN",
-    RESTAURANT_MANAGER = "RESTAURANT_MANAGER",
-    MEMBER = "MEMBER"
-
+    USER = "USER"
 }

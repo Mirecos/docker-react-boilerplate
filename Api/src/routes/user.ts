@@ -1,12 +1,13 @@
 import express, { Request, Response, Router } from "express";
 import { prisma } from "..";
-import { User } from "@prisma/client";
+import { User } from "../../prisma/generated/client";
 import { CustomError } from "../types/classes/CustomError";
 import { Success } from "../types/classes/Success";
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { days_token_expiry, JWT_SECRET } from "../config/config";
 import Identify from "../decorators/Identify";
 import bcrypt from "bcrypt";
+import { RoleLabel } from "../authorizations/RoleLabel";
 
 export const userRouter : Router = express.Router();
 
@@ -73,11 +74,16 @@ userRouter.post("/createUser" , async (req: Request, res: Response) => {
     let user = req.body.user as User;
     const salt = await bcrypt.genSalt();
 
-
     user.password = await bcrypt.hash(user.password, salt)
 
     try {
-        const new_user = await prisma.user.create({data: {...user}});
+        const permission = await prisma.permission.findFirstOrThrow({where: {label: RoleLabel.USER}})
+        const new_user = await prisma.user.create({data: {
+            email: user.email,
+            name: user.name,
+            password: user.password,
+            role: { connect: permission }
+        }});
         const token = jwt.sign({id: new_user.id}, JWT_SECRET)
         await prisma.user.update({where: {id: new_user.id}, data: {token: token, tokenExpiry: new Date(Date.now() + 1000 * 60 * 60 * 24 * days_token_expiry) }});
         res.send(new Success("User was created", req));
@@ -114,7 +120,12 @@ userRouter.post("/register", async (req: Request, res: Response) => {
     user.password = await bcrypt.hash(user.password, salt)
 
     try {
-        const new_user = await prisma.user.create({data: {...user}});
+        const new_user = await prisma.user.create({data: {
+                email: user.email,
+                name: user.name,
+                password: user.password,
+                role: { connect: {id: 1} }
+            }});
         const token = jwt.sign({id: new_user.id}, JWT_SECRET)
         await prisma.user.update({where: {id: new_user.id}, data: {token: token, tokenExpiry: new Date(Date.now() + 1000 * 60 * 60 * 24 * days_token_expiry) }});
         res.send(new Success("User was created", req, {token: token}));
@@ -123,6 +134,9 @@ userRouter.post("/register", async (req: Request, res: Response) => {
             case "P2002":
                 res.status(400).send(new CustomError('400', "Email already exists", req));
                 return;
+            default:
+                console.error(error);
+                break;
         }
         res.status(500).send(new CustomError(
             '500',

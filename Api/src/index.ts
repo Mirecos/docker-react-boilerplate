@@ -4,6 +4,7 @@ import { port, hostname } from './config/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import { PrismaClient } from '../prisma/generated/client';
+import { initPermissions, updatePermissions } from "./authorizations/Actions";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -19,6 +20,8 @@ app.get("/" , (req: Request, res: Response) => {
 
 // Specifying hostname assumes to not open to public network
 app.listen(port, hostname, () => {
+    initPermissions() //Initialize permissions and roles on server start
+    updatePermissions()
     if(hostname === "0.0.0.0"){
         console.log(`[server]: Server is running at http://localhost:${port}`);    
     }else{
