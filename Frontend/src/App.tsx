@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Container, CssBaseline, Paper, ThemeProvider } from '@mui/material';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/navbar';
 import { UserProvider } from './context/userContext';
@@ -8,13 +8,15 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import { darkTheme, lightTheme } from './config/theme';
 
 function App() {
   return (
-    <SnackbarProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <Box>
+    <ThemeProvider theme={darkTheme}>
+      <SnackbarProvider>
+        <UserProvider>
+          <CssBaseline />
+          <BrowserRouter>
             <Navbar />
             <Box sx={{ mt: 8 }}>
               <Routes>
@@ -24,10 +26,10 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
               </Routes>
             </Box>
-          </Box>
-        </BrowserRouter>
-      </UserProvider>
-    </SnackbarProvider>
+          </BrowserRouter>
+        </UserProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 }
 
