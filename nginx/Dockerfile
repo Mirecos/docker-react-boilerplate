@@ -35,7 +35,7 @@ FROM nginx:stable-alpine
 COPY --from=frontend-build /app/build /usr/share/nginx/html
 
 # Copy nginx configuration
-COPY nginx/default.prod.conf /etc/nginx/conf.d/default.conf
+COPY nginx/prod/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
