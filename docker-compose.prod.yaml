@@ -1,7 +1,7 @@
 services:
   database:
     container_name: app-database
-    image: mysql:5.7
+    image: postgres:16
     environment:
       - PRODUCTION_MODE=true
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
